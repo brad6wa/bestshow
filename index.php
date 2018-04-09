@@ -1,3 +1,24 @@
+<?php
+// 导入工具
+require_once "./fn.php";
+
+//根据 key查询出网络的logo 与 菜单
+// site_logo  nav_menus
+// 先准备sql语句，key和value是sql语句的关键字，用反引号包起来
+$sql_log = "SELECT `value` FROM options WHERE `key`='site_logo'";
+$sql_menus = "SELECT `value` FROM options WHERE `key`='nav_menus'";
+
+//查询数据
+$logo = select_single( $sql_log );
+$nav_menus = select_single( $sql_menus );
+
+var_dump($logo);
+var_dump($nav_menus);
+
+exit;
+?>
+
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>

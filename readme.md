@@ -15,4 +15,6 @@
   注意点：
     1.数据库里面网站logo是一个字段，必须使用数据库查询才能拿到，从实际生活推广上来看，使用php获取logo，技术上ajax也可以实现。
     2.数据库里菜单栏的数据和滚动图片的数据是json数据，php处理json通过遍历显示到页面比ajax复杂。
+    3.导入工具 require_once, require, includ_once, includ,这几个方法的区别
+    4.sql语句中key和value是sql语句的关键字，用反引号包起来
 
