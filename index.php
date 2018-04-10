@@ -2,7 +2,7 @@
 // 导入工具
 require_once "./fn.php";
 
-//根据 key查询出网络的logo 与 菜单
+//根据 key查询出网页的logo 与 菜单
 // site_logo  nav_menus
 // 先准备sql语句，key和value是sql语句的关键字，用反引号包起来
 $sql_log = "SELECT `value` FROM options WHERE `key`='site_logo'";
@@ -11,11 +11,21 @@ $sql_menus = "SELECT `value` FROM options WHERE `key`='nav_menus'";
 //查询数据
 $logo = select_single( $sql_log );
 $nav_menus = select_single( $sql_menus );
+// 测试代码
+// var_dump($logo);
+// var_dump($nav_menus);//josn 格式的字符串
+// exit;
 
-var_dump($logo);
-var_dump($nav_menus);
+// 把数组变成json用的是json_encode()
+// 把json变成数组用的是json_decode()
+$nav_menus_obj = json_decode( $nav_menus );
+// var_dump($nav_menus_obj[0] );
+// var_dump($nav_menus_obj[0] -> text );
+// exit;
 
-exit;
+
+// 用ajax方式获得主页的轮播图 即需要一个后台的php文件
+//  当前文件（.php）中的js代码应该是返回到浏览器以后再执行的
 ?>
 
 
@@ -25,8 +35,9 @@ exit;
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>阿里百秀-发现生活，发现美!</title>
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="assets/vendors/font-awesome/css/font-awesome.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/vendors/nprogress/nprogress.css">
+  <link rel="stylesheet" href="/assets/vendors/font-awesome/css/font-awesome.css">
 </head>
 <body>
   <div class="wrapper">
@@ -39,12 +50,24 @@ exit;
       </ul>
     </div>
     <div class="header">
-      <h1 class="logo"><a href="index.html"><img src="assets/img/logo.png" alt=""></a></h1>
+      <h1 class="logo"><a href="index.html">
+
+
+      <!-- 网站logo start -->
+      <img src="<?php echo $logo;?>" alt="">
+      <!-- 网站logo end -->
+      
+      </a></h1>
       <ul class="nav">
-        <li><a href="javascript:;"><i class="fa fa-glass"></i>奇趣事</a></li>
-        <li><a href="javascript:;"><i class="fa fa-phone"></i>潮科技</a></li>
-        <li><a href="javascript:;"><i class="fa fa-fire"></i>会生活</a></li>
-        <li><a href="javascript:;"><i class="fa fa-gift"></i>美奇迹</a></li>
+
+
+        <!-- 导航菜单 start -->
+        <?php foreach( $nav_menus_obj as $obj ) {?>
+        <li><a href="<?php echo $obj->link;?>" title="<?php echo $obj->title;?>"><i class="<?php echo $obj->icon?>"></i><?php echo $obj->text?></a></li>
+        <?php } ?>
+        <!-- 导航菜单 end -->
+
+
       </ul>
       <div class="search">
         <form>
@@ -201,37 +224,16 @@ exit;
       </div>
     </div>
     <div class="content">
+
+
+
       <div class="swipe">
-        <ul class="swipe-wrapper">
-          <li>
-            <a href="#">
-              <img src="uploads/slide_1.jpg">
-              <span>XIU主题演示</span>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <img src="uploads/slide_2.jpg">
-              <span>XIU主题演示</span>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <img src="uploads/slide_1.jpg">
-              <span>XIU主题演示</span>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <img src="uploads/slide_2.jpg">
-              <span>XIU主题演示</span>
-            </a>
-          </li>
-        </ul>
-        <p class="cursor"><span class="active"></span><span></span><span></span><span></span></p>
-        <a href="javascript:;" class="arrow prev"><i class="fa fa-chevron-left"></i></a>
-        <a href="javascript:;" class="arrow next"><i class="fa fa-chevron-right"></i></a>
+       <!-- 图片轮播 -->
       </div>
+
+
+
+      
       <div class="panel focus">
         <h3>焦点关注</h3>
         <ul>
@@ -411,29 +413,66 @@ exit;
       <p>© 2016 XIU主题演示 本站主题由 themebetter 提供</p>
     </div>
   </div>
-  <script src="assets/vendors/jquery/jquery.js"></script>
-  <script src="assets/vendors/swipe/swipe.js"></script>
+  <script src="/assets/vendors/nprogress/nprogress.js"></script>
+  <script src="/assets/vendors/jquery/jquery.js"></script>
+  <script src="/assets/vendors/art-Template/template-web.js"></script>
+  <script src="/assets/vendors/swipe/swipe.js"></script>
+
+
+  <!-- 轮播图模板 -->
+  <script type="text/template" id="swipeid">
+    <ul class="swipe-wrapper">
+    {{ each list }}
+      <li>
+        <a href="{{ $value.link}}">
+          <img src="{{ $value.image}}">
+          <span>{{ $value.text }}</span>
+        </a>
+      </li>
+    {{ /each }}
+    </ul>
+    <p class="cursor">
+      {{ each list }}
+      <span {{ $index == 0 ? 'class=active' : '' }}></span>
+      {{ /each }}
+    </p>
+    <a href="javascript:;" class="arrow prev"><i class="fa fa-chevron-left"></i></a>
+    <a href="javascript:;" class="arrow next"><i class="fa fa-chevron-right"></i></a>
+  </script>
+
+
   <script>
-    //
-    var swiper = Swipe(document.querySelector('.swipe'), {
-      auto: 3000,
-      transitionEnd: function (index) {
-        // index++;
+    // 初始化我们的代码 封装起来为的是模板加载完在ajax内调用
+    function swipe_init() {
+      //
+      var swiper = Swipe(document.querySelector('.swipe'), {
+        auto: 3000,
+        transitionEnd: function (index) {
+          // index++;
 
-        $('.cursor span').eq(index).addClass('active').siblings('.active').removeClass('active');
+          $('.cursor span').eq(index).addClass('active').siblings('.active').removeClass('active');
+        }
+      });
+
+      // 上/下一张
+      $('.swipe .arrow').on('click', function () {
+        var _this = $(this);
+
+        if(_this.is('.prev')) {
+          swiper.prev();
+        } else if(_this.is('.next')) {
+          swiper.next();
+        }
+      });
+    }
+
+    // 调用ajax发送请求 
+    $.get("./index.swipe.php",function(json){
+        $(".swipe").html(template( "swipeid", { list: json } ));
+        // 调用轮播图代码
+        swipe_init();
       }
-    });
-
-    // 上/下一张
-    $('.swipe .arrow').on('click', function () {
-      var _this = $(this);
-
-      if(_this.is('.prev')) {
-        swiper.prev();
-      } else if(_this.is('.next')) {
-        swiper.next();
-      }
-    })
+    );
   </script>
 </body>
 </html>
