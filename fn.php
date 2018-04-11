@@ -19,4 +19,18 @@ function select_single( $sql ) {
   return $item[0];
 }
 
+
+// 查询表数据
+function select_table( $sql ) {
+  $conn = mysqli_connect( DB_IP, DB_USER, DB_PWD, DB_NAME );
+  $reader = mysqli_query( $conn, $sql );
+  $list = array();
+  while ( $item = mysqli_fetch_assoc( $reader ) ) {
+    $list[] = $item;
+  }
+  mysqli_free_result( $reader );
+  mysqli_close( $conn );
+  return $list;
+}
+
 ?>

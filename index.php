@@ -333,81 +333,23 @@ $nav_menus_obj = json_decode( $nav_menus );
           </li>
         </ul>
       </div>
-      <div class="panel new">
-        <h3>最新发布</h3>
-        <div class="entry">
-          <div class="head">
-            <span class="sort">会生活</span>
-            <a href="javascript:;">星球大战：原力觉醒视频演示 电影票68</a>
-          </div>
-          <div class="main">
-            <p class="info">admin 发表于 2015-06-29</p>
-            <p class="brief">星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯</p>
-            <p class="extra">
-              <span class="reading">阅读(3406)</span>
-              <span class="comment">评论(0)</span>
-              <a href="javascript:;" class="like">
-                <i class="fa fa-thumbs-up"></i>
-                <span>赞(167)</span>
-              </a>
-              <a href="javascript:;" class="tags">
-                分类：<span>星球大战</span>
-              </a>
-            </p>
-            <a href="javascript:;" class="thumb">
-              <img src="uploads/hots_2.jpg" alt="">
-            </a>
-          </div>
-        </div>
-        <div class="entry">
-          <div class="head">
-            <span class="sort">会生活</span>
-            <a href="javascript:;">星球大战：原力觉醒视频演示 电影票68</a>
-          </div>
-          <div class="main">
-            <p class="info">admin 发表于 2015-06-29</p>
-            <p class="brief">星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯</p>
-            <p class="extra">
-              <span class="reading">阅读(3406)</span>
-              <span class="comment">评论(0)</span>
-              <a href="javascript:;" class="like">
-                <i class="fa fa-thumbs-up"></i>
-                <span>赞(167)</span>
-              </a>
-              <a href="javascript:;" class="tags">
-                分类：<span>星球大战</span>
-              </a>
-            </p>
-            <a href="javascript:;" class="thumb">
-              <img src="uploads/hots_2.jpg" alt="">
-            </a>
-          </div>
-        </div>
-        <div class="entry">
-          <div class="head">
-            <span class="sort">会生活</span>
-            <a href="javascript:;">星球大战：原力觉醒视频演示 电影票68</a>
-          </div>
-          <div class="main">
-            <p class="info">admin 发表于 2015-06-29</p>
-            <p class="brief">星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯，星球大战:原力觉醒：《星球大战:原力觉醒》中国首映盛典红毯</p>
-            <p class="extra">
-              <span class="reading">阅读(3406)</span>
-              <span class="comment">评论(0)</span>
-              <a href="javascript:;" class="like">
-                <i class="fa fa-thumbs-up"></i>
-                <span>赞(167)</span>
-              </a>
-              <a href="javascript:;" class="tags">
-                分类：<span>星球大战</span>
-              </a>
-            </p>
-            <a href="javascript:;" class="thumb">
-              <img src="uploads/hots_2.jpg" alt="">
-            </a>
-          </div>
-        </div>
+
+
+
+
+
+
+      <!-- 文章列表 start -->
+      <div class="panel new" id="articleid">
+        
       </div>
+      <!-- 文章 end -->
+
+
+
+
+
+
     </div>
     <div class="footer">
       <p>© 2016 XIU主题演示 本站主题由 themebetter 提供</p>
@@ -439,7 +381,40 @@ $nav_menus_obj = json_decode( $nav_menus );
     <a href="javascript:;" class="arrow prev"><i class="fa fa-chevron-left"></i></a>
     <a href="javascript:;" class="arrow next"><i class="fa fa-chevron-right"></i></a>
   </script>
+  <!-- 文章模板 -->
+  <script type="text/template" id="articletpl">
+    <h3>最新发布</h3>
 
+        {{ each list v}}
+        <div class="entry">
+          <div class="head">
+            <span class="sort">{{ v.name }}</span>
+            <a href="javascript:;">{{ v.title }}</a>
+          </div>
+          <div class="main">
+            <p class="info"> {{ v.nickname }} 发表于 {{ v.created }}</p>
+            <p class="brief">{{ v.content }}</p>
+            <p class="extra">
+              <span class="reading">阅读({{ v.views || 0 }})</span>
+              <span class="comment">评论({{ v.count || 0 }})</span>
+              <a href="javascript:;" class="like">
+                <i class="fa fa-thumbs-up"></i>
+                <span>赞({{ v.likes || 0 }})</span>
+              </a>
+              <a href="javascript:;" class="tags">
+                分类：<span>星球大战</span>
+              </a>
+            </p>
+            {{ if v.feature  }}
+            <a href="javascript:;" class="thumb">
+              <img src="{{ v.feature  }}" alt="">
+            </a>
+            {{ /if }}
+          </div>
+        </div>
+        {{ /each }}
+  
+  </script>
 
   <script>
     // 初始化我们的代码 封装起来为的是模板加载完在ajax内调用
@@ -473,6 +448,14 @@ $nav_menus_obj = json_decode( $nav_menus );
         swipe_init();
       }
     );
+
+    // 调用ajax 发送请求获取文章信息
+    $.ajax({
+      url: './index.article.php',
+      success: function (json) {
+        $("#articleid").html( template( "articletpl", {list: json.result } ) );
+      }
+    });
   </script>
 </body>
 </html>
