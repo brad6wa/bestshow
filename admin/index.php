@@ -1,3 +1,29 @@
+<?php
+// 引入库
+require_once "./fn.php";
+
+// 验证登录状态
+
+if( empty( $_COOKIE[ "PHPSESSID" ] ) ) {
+  header( "Location: ./login.php?1" );
+  exit;
+} 
+// 开启session 
+session_start();
+if( empty( $_SESSION[ "current_user_login_id" ] ) ) {
+  header( "Location: ./login.php?2" );
+  exit;
+}
+
+
+$current_user_login_id = $_SESSION[ "current_user_login_id" ];
+
+// 继续查询用户其他信息等操作
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
