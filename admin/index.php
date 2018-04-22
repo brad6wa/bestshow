@@ -19,6 +19,18 @@ if( empty( $_SESSION[ "current_user_login_id" ] ) ) {
 $current_user_login_id = $_SESSION[ "current_user_login_id" ];
 
 // 继续查询用户其他信息等操作
+// 查询用户的所有数据 $current_user_login_id是数值类型不用加引号
+$user_info = select_row("SELECT * FROM users  WHERE id=$current_user_login_id ");
+// 文章的搜索查询
+$post_count = select_single("SELECT COUNT(*) FROM posts");
+// 草稿查询
+$post_count_drafted = select_single("SELECT COUNT(*) FROM posts WHERE `status`='drafted'");
+// 分类查询
+$cate_count = select_single("SELECT COUNT(*) FROM categories");
+// 评论查询
+$comment_count = select_single("SELECT COUNT(*) FROM comments");
+// 评审查询
+$comment_count_held = select_single("SELECT COUNT(*) FROM comments WHERE `status`='held'");
 
 
 ?>
@@ -43,7 +55,7 @@ $current_user_login_id = $_SESSION[ "current_user_login_id" ];
       <button class="btn btn-default navbar-btn fa fa-bars"></button>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="profile.html"><i class="fa fa-user"></i>个人中心</a></li>
-        <li><a href="login.html"><i class="fa fa-sign-out"></i>退出</a></li>
+        <li><a href="/admin/logout.php"><i class="fa fa-sign-out"></i>退出</a></li>
       </ul>
     </nav>
     <div class="container-fluid">
@@ -59,9 +71,9 @@ $current_user_login_id = $_SESSION[ "current_user_login_id" ];
               <h3 class="panel-title">站点内容统计：</h3>
             </div>
             <ul class="list-group">
-              <li class="list-group-item"><strong>10</strong>篇文章（<strong>2</strong>篇草稿）</li>
-              <li class="list-group-item"><strong>6</strong>个分类</li>
-              <li class="list-group-item"><strong>5</strong>条评论（<strong>1</strong>条待审核）</li>
+              <li class="list-group-item"><strong><?php echo $post_count;?></strong>篇文章（<strong><?php echo $post_count_drafted;?></strong>篇草稿）</li>
+              <li class="list-group-item"><strong><?php echo $cate_count;?></strong>个分类</li>
+              <li class="list-group-item"><strong><?php echo $comment_count;?></strong>条评论（<strong><?php echo $comment_count_held;?></strong>条待审核）</li>
             </ul>
           </div>
         </div>
@@ -73,8 +85,19 @@ $current_user_login_id = $_SESSION[ "current_user_login_id" ];
 
   <div class="aside">
     <div class="profile">
-      <img class="avatar" src="../uploads/avatar.jpg">
-      <h3 class="name">布头儿</h3>
+
+
+
+      <!-- php不支持逻辑或 -->
+      <img class="avatar" src="<?php echo isset($user_info["avator"]) 
+                            ? $user_info["avator"]
+                            : '/assets/img/default.png'?>">
+          
+      
+          
+
+
+      <h3 class="name"><?php echo $user_info["nickname"];?></h3>
     </div>
     <ul class="nav">
       <li class="active">

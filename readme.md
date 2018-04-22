@@ -33,6 +33,18 @@
   1 验证有没有带 PHPSESSID 的 cookie 数据, 如果没有直接回到 登录页
   2 在有数据后, 开启 session, 判断用户信息是否存在, 如果不存在, 调回到登录
 
+  退出页面思路
+  index.php页面修改跳转路径（绝对路径）
+  删cookie清session，cookie是PHP通过session_start()自动加的，不可能删掉，cookie是会话级别的关闭浏览器自动清除。
+  所以只需要清除session就可以，两种做法一种是
+  1> unset() cookie对应的key删掉就可以了(常用)
+  2> 销毁 session  session_destroy();
+  清除之前 session_start()一下 清除后跳转到登录页面 header("Location:/admin/login.php");
+
+  后台主页
+  查询当前用户的所有信息，用sql语句查询每一条count
+  <img class="avatar" src="<?php echo empty($user_info["avator"]) ? '/assets/img/default.png' : $user_info["avator"] ?>"> 
+
 
   注意点：
     1.数据库里面网站logo是一个字段，必须使用数据库查询才能拿到，从实际生活推广上来看，使用php获取logo，技术上ajax也可以实现。
@@ -57,3 +69,7 @@
      1- SELECT * FROM user WHERE email='用户输入的email', 取不到数据表示这个用户不存在，取到这个数据就把密码取出来去验证密码。
      2- 只需要判断用户名和密码是否匹配，不关系用户名和密码是否正确，WHERE 条件可以写成 WHERE email='用户输入的email $_POST["email"]' AND password='用户输入的密码$_POST["password"]'，把验证的行为直接交给数据库处理，存在取出id.
     14.主页面验证用户状态，当用户cookie里面有值，开启session_start();还要验证用户存的id是否为空
+    15.index.php页面验证登录状态，判断session里面有没有东西，一种最简单就是直接把session打开，看里边有没有数据，这种方式有点浪费资源，没有提供cookie 打开就会向浏览器传个cookie，网络多一些数据，验证不够严谨，规则上当我们登录后，浏览器cookie里面存一个PHPSESSID的值，存在有可能是登录了或登录超时，不存在肯定没登录。（验证车票）
+    16.走的http协议用绝对路径，例如：header("Location: /admin/index.php");文件里引用的路径用相对路径，例如：require "./fn.php"，和网站跳转有关的都用绝对路径
+    17.php不支持逻辑或
+    18.sql 语句关键字用反向字符串``, 查询的是数值类型不用字符串包裹，是字符串用单双引号包裹""'';

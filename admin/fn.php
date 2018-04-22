@@ -33,5 +33,11 @@ function select_table( $sql ) {
   return $list;
 }
 
+// 查询一行数据
+function select_row( $sql ) {
+  // select_table( $sql ) 二维数组 
+  // 函数的复用
+  return select_table( $sql )[ 0 ];
 
+}
 ?>
